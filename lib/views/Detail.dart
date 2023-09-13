@@ -317,7 +317,7 @@ class _DetailState extends State<Detail> {
   }
 
   bool profile = false;
-  String clearCard = "0200790442";
+  String clearCard = "9999";
   @override
   Widget build(BuildContext context) {
     return Scaffold(

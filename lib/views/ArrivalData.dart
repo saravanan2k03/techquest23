@@ -108,6 +108,29 @@ class _ArrivalDataState extends State<ArrivalData> {
     }
   }
 
+  Future<void> sendPost(String id) async {
+    // Replace with your actual URL
+    final response = await http.post(
+      Uri.parse('https://mzcet.in/techquest23/api/NotAllow.php'),
+      body: {
+        'id': id,
+      }, // Replace '1' with the actual techquest_id you want to update
+    );
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      if (kDebugMode) {
+        print('Success: ${data['success']}');
+      }
+    } else {
+      customshowAlertDialog(
+          'Error', 'Request failed with status:${response.statusCode}');
+      if (kDebugMode) {
+        print('Request failed with status: ${response.statusCode}');
+      }
+    }
+  }
+
   Future<void> customshowAlertDialog(String tittle, String content) async {
     return showDialog<void>(
       context: context,
@@ -198,6 +221,74 @@ class _ArrivalDataState extends State<ArrivalData> {
               ),
               onPressed: () {
                 sendPostRequest(id).whenComplete(() {
+                  Navigator.of(context).pop();
+                  setState(() {
+                    Apicall();
+                    GetStudent();
+                  });
+                });
+              },
+            ),
+            TextButton(
+              child: Text(
+                'CANCEL',
+                style: GoogleFonts.poppins(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13,
+                  color: Colors.black,
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> cutomdianot(String tittle, String content, String id) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          // <-- SEE HERE
+          title: Text(
+            tittle,
+            style: GoogleFonts.poppins(
+              fontWeight: FontWeight.bold,
+              fontSize: 13,
+              color: const Color.fromARGB(255, 77, 45, 111),
+            ),
+          ),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(
+                  content,
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(
+                'OK',
+                style: GoogleFonts.poppins(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13,
+                  color: Colors.black,
+                ),
+              ),
+              onPressed: () {
+                sendPost(id).whenComplete(() {
                   Navigator.of(context).pop();
                   setState(() {
                     Apicall();
@@ -656,73 +747,78 @@ class _ArrivalDataState extends State<ArrivalData> {
     if (kDebugMode) {
       print("count$count");
     }
-    if (editUser.events == items[1].toString()) {
-      if (count < 2) {
-        cutomdia('Allow Participants', 'Do You Want To Allow ',
-            editUser.id.toString());
-        if (kDebugMode) {
-          print("${items[1].toString()} allow");
+    if (editUser.participate == "Yes") {
+      cutomdianot("Not Allow Participants", "Do You Want To Allow",
+          editUser.id.toString());
+    } else {
+      if (editUser.events == items[1].toString()) {
+        if (count < 2) {
+          cutomdia('Allow Participants', 'Do You Want To Allow ',
+              editUser.id.toString());
+          if (kDebugMode) {
+            print("${items[1].toString()} allow");
+          }
+        } else {
+          customshowAlertDialog("Warning", "Student is not allowed");
+          if (kDebugMode) {
+            print("${items[1].toString()}Not allowed");
+          }
         }
-      } else {
-        customshowAlertDialog("Warning", "Student is not allowed");
-        if (kDebugMode) {
-          print("${items[1].toString()}Not allowed");
-        }
-      }
-    } else if (editUser.events == items[2].toString()) {
-      if (count < 2) {
-        cutomdia('Allow Participants', 'Do You Want To Allow ',
-            editUser.id.toString());
-        if (kDebugMode) {
-          print("${items[2].toString()}allow");
-        }
-      } else {
-        customshowAlertDialog("Warning", "Student is not allowed");
+      } else if (editUser.events == items[2].toString()) {
+        if (count < 2) {
+          cutomdia('Allow Participants', 'Do You Want To Allow ',
+              editUser.id.toString());
+          if (kDebugMode) {
+            print("${items[2].toString()}allow");
+          }
+        } else {
+          customshowAlertDialog("Warning", "Student is not allowed");
 
-        if (kDebugMode) {
-          print("${items[2].toString()}Not allowed");
+          if (kDebugMode) {
+            print("${items[2].toString()}Not allowed");
+          }
         }
-      }
-    } else if (editUser.events == items[3].toString()) {
-      if (count < 3) {
-        cutomdia('Allow Participants', 'Do You Want To Allow ',
-            editUser.id.toString());
-        if (kDebugMode) {
-          print("${items[3].toString()}allow");
-        }
-      } else {
-        customshowAlertDialog("Warning", "Student is not allowed");
+      } else if (editUser.events == items[3].toString()) {
+        if (count < 3) {
+          cutomdia('Allow Participants', 'Do You Want To Allow ',
+              editUser.id.toString());
+          if (kDebugMode) {
+            print("${items[3].toString()}allow");
+          }
+        } else {
+          customshowAlertDialog("Warning", "Student is not allowed");
 
-        if (kDebugMode) {
-          print("${items[3].toString()}Not allowed");
+          if (kDebugMode) {
+            print("${items[3].toString()}Not allowed");
+          }
         }
-      }
-    } else if (editUser.events == items[4].toString()) {
-      if (count < 1) {
-        cutomdia('Allow Participants', 'Do You Want To Allow ',
-            editUser.id.toString());
-        if (kDebugMode) {
-          print("${items[4].toString()}allow");
-        }
-      } else {
-        customshowAlertDialog("Warning", "Student is not allowed");
+      } else if (editUser.events == items[4].toString()) {
+        if (count < 1) {
+          cutomdia('Allow Participants', 'Do You Want To Allow ',
+              editUser.id.toString());
+          if (kDebugMode) {
+            print("${items[4].toString()}allow");
+          }
+        } else {
+          customshowAlertDialog("Warning", "Student is not allowed");
 
-        if (kDebugMode) {
-          print("${items[4].toString()}Not allowed");
+          if (kDebugMode) {
+            print("${items[4].toString()}Not allowed");
+          }
         }
-      }
-    } else if (editUser.events == items[5].toString()) {
-      if (count < 1) {
-        cutomdia('Allow Participants', 'Do You Want To Allow ',
-            editUser.id.toString());
-        if (kDebugMode) {
-          print("${items[5].toString()}allow");
-        }
-      } else {
-        customshowAlertDialog("Warning", "Student is not allowed");
+      } else if (editUser.events == items[5].toString()) {
+        if (count < 1) {
+          cutomdia('Allow Participants', 'Do You Want To Allow ',
+              editUser.id.toString());
+          if (kDebugMode) {
+            print("${items[5].toString()}allow");
+          }
+        } else {
+          customshowAlertDialog("Warning", "Student is not allowed");
 
-        if (kDebugMode) {
-          print("${items[5].toString()}Not allowed");
+          if (kDebugMode) {
+            print("${items[5].toString()}Not allowed");
+          }
         }
       }
     }
