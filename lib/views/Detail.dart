@@ -49,6 +49,9 @@ class _DetailState extends State<Detail> {
   final TeamLeader = TextEditingController();
   final Member1 = TextEditingController();
   final Member2 = TextEditingController();
+  final FocusNode firstFocusNode = FocusNode();
+  final FocusNode secondFocusNode = FocusNode();
+  final FocusNode ThirdFocusNode = FocusNode();
   Future<void> sendPostRequest() async {
     // Replace with your actual URL
     final response = await http.post(
@@ -314,6 +317,7 @@ class _DetailState extends State<Detail> {
   }
 
   bool profile = false;
+  String clearCard = "0200790442";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -630,6 +634,21 @@ class _DetailState extends State<Detail> {
                                                 0.10,
                                             child: TextField(
                                               controller: TeamLeader,
+                                              focusNode: firstFocusNode,
+                                              onSubmitted: (value) {
+                                                if (value.toString() !=
+                                                    clearCard) {
+                                                  firstFocusNode.unfocus();
+                                                  FocusScope.of(context)
+                                                      .requestFocus(
+                                                          secondFocusNode);
+                                                } else {
+                                                  TeamLeader.clear();
+                                                  FocusScope.of(context)
+                                                      .requestFocus(
+                                                          firstFocusNode);
+                                                }
+                                              },
                                               decoration: const InputDecoration(
                                                 enabledBorder:
                                                     OutlineInputBorder(
@@ -706,6 +725,25 @@ class _DetailState extends State<Detail> {
                                                 0.10,
                                             child: TextField(
                                               controller: Member1,
+                                              focusNode: secondFocusNode,
+                                              onSubmitted: (value) {
+                                                secondFocusNode.unfocus();
+                                                FocusScope.of(context)
+                                                    .requestFocus(
+                                                        ThirdFocusNode);
+
+                                                if (value == '0200790442') {
+                                                  Member1.clear();
+                                                  TeamLeader.clear();
+                                                  FocusScope.of(context)
+                                                      .requestFocus(
+                                                          firstFocusNode);
+                                                } else {
+                                                  FocusScope.of(context)
+                                                      .requestFocus(
+                                                          ThirdFocusNode);
+                                                }
+                                              },
                                               decoration: const InputDecoration(
                                                 enabledBorder:
                                                     OutlineInputBorder(
@@ -779,6 +817,34 @@ class _DetailState extends State<Detail> {
                                                 0.10,
                                             child: TextField(
                                               controller: Member2,
+                                              focusNode: ThirdFocusNode,
+                                              onSubmitted: (value) {
+                                                if (value == clearCard) {
+                                                  Member2.clear();
+                                                  Member1.clear();
+                                                  FocusScope.of(context)
+                                                      .requestFocus(
+                                                          secondFocusNode);
+                                                } else if (value
+                                                            .toString()
+                                                            .length >
+                                                        10 &&
+                                                    value.toString().substring(
+                                                            value.length -
+                                                                clearCard
+                                                                    .length,
+                                                            value.length) ==
+                                                        clearCard) {
+                                                  Member2.clear();
+                                                  FocusScope.of(context)
+                                                      .requestFocus(
+                                                          ThirdFocusNode);
+                                                } else {
+                                                  FocusScope.of(context)
+                                                      .requestFocus(
+                                                          ThirdFocusNode);
+                                                }
+                                              },
                                               decoration: const InputDecoration(
                                                 enabledBorder:
                                                     OutlineInputBorder(
